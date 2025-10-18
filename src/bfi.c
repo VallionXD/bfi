@@ -97,20 +97,37 @@ void interpret(char* c) {
 			// fflush(stdout);
 			// break;
 
-			if (isatty(STDIN_FILENO)) {
-				printf(">>> ");
-				fflush(stdout);
+			static char in_line[1024];
+			static size_t in_pos;
+			static size_t in_len;
+
+			if (in_pos >= in_len) {
+				if (isatty(STDIN_FILENO)) {
+					for (size_t i = 0; i < in_len; i++) {
+						if (in_line[i] != ' ' && in_line[i] != '\t' && in_line[i] != '\r' && in_line[i] != '\n') {
+							putchar('\n');
+						}
+					}
+					
+					printf(">>> ");
+					fflush(stdout);
+				}
+
+				if (!fgets(in_line, sizeof(in_line), stdin)) {
+					tape[idx] = 0;
+					break;
+				}
+
+				in_len = strnlen(in_line, sizeof(in_line));
+				if (in_len > 0 && in_line[in_len - 1] == '\n') {
+					in_line[in_len - 1] = 0;
+					in_len--;
+				}
+
+				in_pos = 0;
 			}
 
-			int ch = getchar();
-
-			if (ch == EOF) {
-				// treat EOF as 0
-				tape[idx] = 0;
-			} else {
-				tape[idx] = (unsigned char)ch;
-			}
-
+			tape[idx] = (unsigned char)in_line[in_pos++];
 			break;
 		case '[':
 			for (balance = 1, start = c; balance && *c; c++) {

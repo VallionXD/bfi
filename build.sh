@@ -20,3 +20,6 @@ build() {
 
 build build-linux
 build build-windows ../Windows.cmake
+
+sha256sum build-linux/bfi > build-linux/bfi.sha256
+sha256sum build-windows/bfi.exe > build-windows/bfi.exe.sha256
