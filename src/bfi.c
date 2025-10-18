@@ -103,12 +103,14 @@ void interpret(char* c) {
 
 			if (in_pos >= in_len) {
 				if (isatty(STDIN_FILENO)) {
+					int full = 0;
 					for (size_t i = 0; i < in_len; i++) {
 						if (in_line[i] != ' ' && in_line[i] != '\t' && in_line[i] != '\r' && in_line[i] != '\n') {
-							putchar('\n');
+							full = 1;
 						}
 					}
 					
+					if (full) putchar('\n');
 					printf(">>> ");
 					fflush(stdout);
 				}
