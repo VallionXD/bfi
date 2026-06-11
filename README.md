@@ -1,4 +1,4 @@
-# bfi (c)
+# bfi-c
 
 brainfuck interpreter, written in c with cmake build system.
 
